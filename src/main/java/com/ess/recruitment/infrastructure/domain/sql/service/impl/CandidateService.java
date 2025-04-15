@@ -1,4 +1,5 @@
 package com.ess.recruitment.infrastructure.domain.sql.service.impl;
+import com.ess.recruitment.core.req.CandidateFilterRequest;
 import com.ess.recruitment.core.req.RecruitmentRequest;
 import com.ess.recruitment.core.resp.ApiResponse;
 
@@ -14,7 +15,7 @@ public interface CandidateService {
 
     ApiResponse softDeleteCandidate(Long candidateId);
 
-    ApiResponse getAllCandidates(int page, int pageSize);
+    ApiResponse getAllCandidates(CandidateFilterRequest candidateFilterRequest);
 
-    ApiResponse globalSearch(String searchKey, int page, int pageSize);
+    //ApiResponse globalSearch(String searchKey, int page, int pageSize);
 }

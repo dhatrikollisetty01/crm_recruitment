@@ -13,8 +13,7 @@ import java.util.List;
 public class JobsDTO {
     private Long jobId;
     private String jobCode;
-    private Status status;
-    @NotNull(message = "Title Not Be Null")
+    private String status;
     private String jobTitle;
     private String technology;
     private int delFlag =1;

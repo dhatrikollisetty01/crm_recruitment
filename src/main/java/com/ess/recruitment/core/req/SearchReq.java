@@ -11,4 +11,6 @@ public class SearchReq {
     private String searchKey;
     private int page;
     private int pageSize;
+    private String sortBy;
+    private String direction; // "asc" or "desc"
 }

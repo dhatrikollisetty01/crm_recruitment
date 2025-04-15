@@ -1,8 +1,7 @@
 package com.ess.recruitment.core.dto;
-import com.ess.recruitment.core.utils.Country;
-import com.ess.recruitment.core.utils.Qualifications;
+
 import com.ess.recruitment.core.utils.WorkType;
-import com.ess.recruitment.core.utils.State;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,13 +23,13 @@ public class TemplateDTO implements Serializable {
     private List<String> secondarySkills=new ArrayList<>();
     private  List<String> technicalSkills=new ArrayList<>();
     private String city;
-    private Country country;
-    private State state;
+    private String country;
+    private String state;
     private int workExperience;
     private WorkType workType;
     private String languagesRequired;
     private String jobDescription;
     private String approvalFlow;
-    private Qualifications qualifications;
+    private String qualifications;
 
 }

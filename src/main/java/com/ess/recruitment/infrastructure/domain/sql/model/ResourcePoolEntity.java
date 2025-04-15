@@ -38,7 +38,7 @@ public class ResourcePoolEntity implements Serializable {
     @Column(name ="DATE_OF_BIRTH")
     private String dateOfBirth;
     @Column(name = "SOURCE")
-    private Source source;
+    private String source;
     @Column(name = "YEARS_OF_EXPERIENCE")
     private int yearsOfExperience;
     @Column(name = "PAN_CARD_NUMBER")
@@ -51,12 +51,12 @@ public class ResourcePoolEntity implements Serializable {
     private String city;
   //@Enumerated(EnumType.STRING)
    @Column(name = "COUNTRY")
-    private Country country;
+    private String country;
   //@Enumerated(EnumType.STRING)
     @Column(name = "STATE")
-    private State state;
-    @Enumerated(EnumType.STRING)
-    private Address address;
+    private String state;
+
+    private String address;
     @Column(name = "PINCODE")
     private Long pinCode;
     @Column(name = "SKILLS")

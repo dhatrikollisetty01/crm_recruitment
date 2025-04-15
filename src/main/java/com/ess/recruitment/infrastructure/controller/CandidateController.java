@@ -1,6 +1,7 @@
 package com.ess.recruitment.infrastructure.controller;
 
 import com.ess.recruitment.core.constants.RecruitmentConstants;
+import com.ess.recruitment.core.req.CandidateFilterRequest;
 import com.ess.recruitment.core.req.RecruitmentRequest;
 import com.ess.recruitment.core.req.SearchReq;
 import com.ess.recruitment.core.resp.ApiResponse;
@@ -47,14 +48,9 @@ public class CandidateController {
         return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.status(404).body(response);
     }
 
-    @PostMapping(RecruitmentConstants.RECRUITMENT_GLOBAL_SEARCH)
-    public ResponseEntity<ApiResponse> globalSearch(@RequestBody SearchReq searchReq) {
-        ApiResponse response = candidateService.globalSearch(
-                searchReq.getSearchKey(),
-                searchReq.getPage(),
-                searchReq.getPageSize()
-        );
-        return ResponseEntity.ok(response);
+    @PostMapping("/search")
+    public ApiResponse getAllCandidates(@RequestBody CandidateFilterRequest filterRequest) {
+        return candidateService.getAllCandidates(filterRequest);
     }
 
 }

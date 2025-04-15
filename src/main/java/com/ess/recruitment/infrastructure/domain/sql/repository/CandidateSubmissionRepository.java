@@ -2,6 +2,7 @@ package com.ess.recruitment.infrastructure.domain.sql.repository;
 
 import com.ess.recruitment.core.utils.Status;
 import com.ess.recruitment.infrastructure.domain.sql.model.CandidateSubmissionEntity;
+import com.ess.recruitment.infrastructure.domain.sql.model.JobsEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,9 @@ public interface CandidateSubmissionRepository extends JpaRepository<CandidateSu
     // Count by active status (e.g., candidates flagged for deletion or inactive status)
     long countByDelFlag(Integer delFlag);
 
+    boolean existsByEmail(String email);
+
+
     // Count by specific status
     long countByStatus(Status status);
 
@@ -31,7 +35,10 @@ public interface CandidateSubmissionRepository extends JpaRepository<CandidateSu
     @Query("UPDATE CandidateSubmissionEntity c SET c.delFlag = 0, c.status = 'COMPLETE' WHERE c.id = :id")
     void softDeleteCandidate(@Param("id") Long id);
 
-    // Global search using candidate code
-    @Query("SELECT c FROM CandidateSubmissionEntity c WHERE :searchKey IS NULL OR LOWER(c.candidateCode) LIKE LOWER(CONCAT('%', :searchKey, '%'))")
-    Page<CandidateSubmissionEntity> globalSearch(@Param("searchKey") String searchKey, Pageable pageable);
+
+
+
+    Page<JobsEntity> globalSearchJobs(@Param("keyword") String keyword, Pageable pageable);
+
+    Page<CandidateSubmissionEntity> globalSearch(@Param("keyword") String keyword, Pageable pageable);
 }

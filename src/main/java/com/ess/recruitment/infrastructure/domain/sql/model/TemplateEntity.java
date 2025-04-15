@@ -1,8 +1,6 @@
 package com.ess.recruitment.infrastructure.domain.sql.model;
 
-import com.ess.recruitment.core.utils.Country;
-import com.ess.recruitment.core.utils.Qualifications;
-import com.ess.recruitment.core.utils.State;
+
 import com.ess.recruitment.core.utils.WorkType;
 import jakarta.persistence.*;
 
@@ -53,12 +51,12 @@ public class TemplateEntity implements Serializable {
     private String city;
 
    // @NotNull(message = "Country is mandatory")
-    @Enumerated(EnumType.STRING)
-    private Country country;
+
+    private String country;
 
   //  @NotNull(message = "State is mandatory")
-    @Enumerated(EnumType.STRING)
-    private State state;
+
+    private String state;
 
    // @Min(value = 0, message = "Work experience must be zero or more")
     @Column(name = "WORK_EXPERIENCE")
@@ -80,8 +78,8 @@ public class TemplateEntity implements Serializable {
     private String approvalFlow;
 
    // @NotNull(message = "Qualifications are mandatory")
-    @Enumerated(EnumType.STRING)
-    private Qualifications qualifications;
+
+    private String qualifications;
 
    // @NotNull(message = "Status is mandatory")
     @Column(name = "STATUS")

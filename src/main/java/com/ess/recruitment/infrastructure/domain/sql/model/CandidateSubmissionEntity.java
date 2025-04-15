@@ -1,8 +1,6 @@
 package com.ess.recruitment.infrastructure.domain.sql.model;
 
-import com.ess.recruitment.core.utils.Country;
-import com.ess.recruitment.core.utils.PayType;
-import com.ess.recruitment.core.utils.State;
+
 import com.ess.recruitment.core.utils.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,8 +26,7 @@ public class CandidateSubmissionEntity {
     @Column(name = "IS_ACTIVE")
     private Integer delFlag = 1;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private String status;
 
     @Column(name ="CANDIDATE_CODE")
     private String candidateCode;
@@ -58,8 +55,8 @@ public class CandidateSubmissionEntity {
     @Column(name = "ZIP")
     private String zip;
 
-    @Enumerated(EnumType.STRING)
-    private State state;
+    @Column(name="State")
+    private String state;
 
     @Column(name = "CURRENT_LOCATION")
     private String currentLocation;
@@ -82,8 +79,8 @@ public class CandidateSubmissionEntity {
     @Column(name = "RATE")
     private String rate;
 
-    @Enumerated(EnumType.STRING)
-    private PayType ctcType; // Hourly/Monthly/Yearly
+   @Column(name = "CtcType")
+    private String ctcType; // Hourly/Monthly/Yearly
 
     @Column(name = "LINKED_IN_URL")
     private String linkedInUrl;
@@ -116,8 +113,8 @@ public class CandidateSubmissionEntity {
     @Temporal(TemporalType.DATE)
     private Date yearOfPassed;
 
-    @Enumerated(EnumType.STRING)
-    private Country country;
+    @Column(name = "country")
+    private String country;
 
     @Column()
     private Boolean consent;

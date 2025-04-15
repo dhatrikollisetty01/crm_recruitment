@@ -1,6 +1,7 @@
 package com.ess.recruitment.infrastructure.domain.sql.service.impl;
 
 import com.ess.recruitment.core.dto.CandidateSubmissionDto;
+import com.ess.recruitment.core.req.CandidateFilterRequest;
 import com.ess.recruitment.core.req.RecruitmentRequest;
 import com.ess.recruitment.core.resp.ApiResponse;
 import com.ess.recruitment.core.resp.PaginationResponse;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,21 +34,20 @@ public class CandidateServiceImpl implements CandidateService {
     @Autowired
     private MapperConfig mapperConfig;
 
-    private <T> PaginationResponse<T> createPaginationResponse(Page<T> page) {
-        return new PaginationResponse<>(
 
-                page.getNumber(),
-                page.getTotalPages(),
-                page.getTotalElements(),
-                page.getSize(),
-                page.getContent()
-        );
-    }
 
     @Override
     @Transactional
     public ApiResponse createCandidate(RecruitmentRequest recruitmentRequest) {
         try {
+            String email = recruitmentRequest.getCandidateSubmissionDto().getEmail();
+
+            // Check if email already exists
+            boolean emailExists = candidateRepository.existsByEmail(email);
+            if (emailExists) {
+                return new ApiResponse(false, "This email is already registered with us.", null, null);
+            }
+
             Optional<CandidateSubmissionEntity> latestCandidate = candidateRepository.findTopByOrderByCandidateCodeDesc();
             String candidateCode = latestCandidate
                     .map(candidate -> {
@@ -225,12 +226,20 @@ public class CandidateServiceImpl implements CandidateService {
         candidateRepository.softDeleteCandidate( candidateId);
         return new ApiResponse(true, "Soft delete success", null, null);
     }
-
     @Override
     @Transactional
-    public ApiResponse getAllCandidates(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<CandidateSubmissionEntity> candidatePage = candidateRepository.findAll(pageable);
+    public ApiResponse getAllCandidates(CandidateFilterRequest filterRequest) {
+        Sort sort = Sort.by(Sort.Direction.fromString(filterRequest.getDirection()), filterRequest.getSortBy());
+        Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getPageSize(), sort);
+
+        Page<CandidateSubmissionEntity> candidatePage;
+
+        if (filterRequest.getSearchKeyword() != null && !filterRequest.getSearchKeyword().isEmpty()) {
+            candidatePage = candidateRepository.globalSearch(filterRequest.getSearchKeyword(), pageable);
+        } else {
+            candidatePage = candidateRepository.findAll(pageable);
+        }
+
         List<CandidateSubmissionDto> candidates = candidatePage.getContent().stream()
                 .map(mapperConfig::toCandidateDTO)
                 .collect(Collectors.toList());
@@ -242,31 +251,33 @@ public class CandidateServiceImpl implements CandidateService {
                 candidatePage.getSize(),
                 candidates
         );
+
         return new ApiResponse(true, "Candidates retrieved successfully", null, paginationResponse);
     }
 
-    @Override
-    @Transactional
-    public ApiResponse globalSearch(String searchKey, int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<CandidateSubmissionEntity> candidateSubmissionEntities = candidateRepository.globalSearch(searchKey, pageable);
 
-        List<CandidateSubmissionDto> candidateSubmissionDtoList = candidateSubmissionEntities.getContent().stream()
-                .map(mapperConfig::toCandidateDTO)
-                .collect(Collectors.toList());
-
-        PaginationResponse<CandidateSubmissionDto> paginationResponse = new PaginationResponse<>(
-                candidateSubmissionEntities.getTotalPages(),
-                candidateSubmissionEntities.getNumber(),
-                candidateSubmissionEntities.getTotalElements(),
-                candidateSubmissionEntities.getSize(),
-                candidateSubmissionDtoList
-        );
-
-        if (candidateSubmissionDtoList.isEmpty()) {
-            return new ApiResponse(false, "No Candidates found matching the criteria", null, paginationResponse);
-        }
-
-        return new ApiResponse(true, "Candidates found", null, paginationResponse);
-    }
+//    @Override
+//    @Transactional
+//    public ApiResponse globalSearch(String searchKey, int page, int pageSize) {
+//        Pageable pageable = PageRequest.of(page, pageSize);
+//        Page<CandidateSubmissionEntity> candidateSubmissionEntities = candidateRepository.globalSearch(searchKey, pageable);
+//
+//        List<CandidateSubmissionDto> candidateSubmissionDtoList = candidateSubmissionEntities.getContent().stream()
+//                .map(mapperConfig::toCandidateDTO)
+//                .collect(Collectors.toList());
+//
+//        PaginationResponse<CandidateSubmissionDto> paginationResponse = new PaginationResponse<>(
+//                candidateSubmissionEntities.getTotalPages(),
+//                candidateSubmissionEntities.getNumber(),
+//                candidateSubmissionEntities.getTotalElements(),
+//                candidateSubmissionEntities.getSize(),
+//                candidateSubmissionDtoList
+//        );
+//
+//        if (candidateSubmissionDtoList.isEmpty()) {
+//            return new ApiResponse(false, "No Candidates found matching the criteria", null, paginationResponse);
+//        }
+//
+//        return new ApiResponse(true, "Candidates found", null, paginationResponse);
+//    }
 }
