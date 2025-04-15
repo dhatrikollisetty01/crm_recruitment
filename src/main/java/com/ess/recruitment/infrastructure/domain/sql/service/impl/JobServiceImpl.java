@@ -89,7 +89,7 @@ public class JobServiceImpl implements JobService {
 
         job.setDelFlag(0);
         jobRepository.save(job);
-        return new ApiResponse(true, "Job deleted successfully", null);
+        return new ApiResponse(true, "Job deleted successfully", job);
     }
 
     @Override

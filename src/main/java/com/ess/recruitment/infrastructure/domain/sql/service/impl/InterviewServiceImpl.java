@@ -61,7 +61,7 @@ public class InterviewServiceImpl implements InterviewService {
                     mapperConfig.toInterviewDto(savedEntity), null);
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to create interview: " + e.getMessage());
+            throw new RuntimeException("Failed to create interview: " + e.getMessage());
         }
     }
 

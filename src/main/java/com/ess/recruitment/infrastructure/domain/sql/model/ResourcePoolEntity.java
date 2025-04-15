@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class ResourcePoolEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long poolId;
+
 
     private String resourceCode;
 

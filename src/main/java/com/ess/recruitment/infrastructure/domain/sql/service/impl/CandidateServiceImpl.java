@@ -219,12 +219,9 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     @Transactional
     public ApiResponse softDeleteCandidate(Long candidateId) {
-        Optional<CandidateSubmissionEntity> candidateSubmissionEntityOptional = candidateRepository.findById(candidateId);
-        if (candidateSubmissionEntityOptional.isEmpty()) {
-            throw new EntityNotFoundException("Candidate not found with ID: " + candidateId);
-        }
-        candidateRepository.softDeleteCandidate( candidateId);
-        return new ApiResponse(true, "Soft delete success", null, null);
+        CandidateSubmissionEntity candidateSubmissionEntityOptional = candidateRepository.findById(candidateId).orElseThrow(null);
+        candidateSubmissionEntityOptional.setDelFlag(0);
+        return new ApiResponse(true, "Soft delete success", mapperConfig.toCandidateDTO(candidateSubmissionEntityOptional), null);
     }
     @Override
     @Transactional
